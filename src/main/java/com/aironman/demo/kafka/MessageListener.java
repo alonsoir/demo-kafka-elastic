@@ -2,15 +2,26 @@ package com.aironman.demo.kafka;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import com.aironman.demo.es.model.BitcoinEuroESEntity;
+import com.aironman.demo.es.service.BitCoinESService;
 
+/***
+ * Naive Kafka consumer implementation. I must interwire here the elastic search connector.
+ * @author aironman
+ *
+ */
 public class MessageListener {
 
+	@Autowired
+	BitCoinESService bcESService;
+	// TODO what it is means the number?
     private CountDownLatch latch = new CountDownLatch(3);
 
     private CountDownLatch partitionLatch = new CountDownLatch(2);
@@ -21,19 +32,19 @@ public class MessageListener {
     
     private CountDownLatch bitCoinLatch = new CountDownLatch(1);
 
-    @KafkaListener(topics = "${message.topic.name}", group = "foo", containerFactory = "fooKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${greeting.topic.name}", group = "foo", containerFactory = "fooKafkaListenerContainerFactory")
     public void listenGroupFoo(String message) {
         System.out.println("Received Messasge in group 'foo': " + message);
         latch.countDown();
     }
 
-    @KafkaListener(topics = "${message.topic.name}", group = "bar", containerFactory = "barKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${greeting.topic.name}", group = "bar", containerFactory = "barKafkaListenerContainerFactory")
     public void listenGroupBar(String message) {
         System.out.println("Received Messasge in group 'bar': " + message);
         latch.countDown();
     }
 
-    @KafkaListener(topics = "${message.topic.name}", containerFactory = "headersKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "headersKafkaListenerContainerFactory")
     public void listenWithHeaders(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
         System.out.println("Received Messasge: " + message + " from partition: " + partition);
         latch.countDown();
@@ -57,16 +68,46 @@ public class MessageListener {
         this.greetingLatch.countDown();
     }
     
-    @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "bitCoinKafkaListenerContainerFactory")
+    /***
+     * This method is invoked when a new message arrives to the topic. 
+     * @param bitcoinEuroKafkaEntity the new message from the topic.
+     */
+    @KafkaListener(topics = "${message.topic.name}", containerFactory = "bitCoinKafkaListenerContainerFactory")
     public void bitCoinListener(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
     	System.out.println("Recieved bitcoinEuroKafkaEntity message: " + bitcoinEuroKafkaEntity);
+    	BitcoinEuroESEntity entity = createElasticPojoFromKafkaPojo(bitcoinEuroKafkaEntity);
+    	BitcoinEuroESEntity saved = bcESService.save(entity );
+		System.out.println("Entity saved in ES. " +saved .toString() );
     	this.bitCoinLatch.countDown();
     }
+
+	private BitcoinEuroESEntity createElasticPojoFromKafkaPojo(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
+		BitcoinEuroESEntity entity = new BitcoinEuroESEntity();
+    	entity .set_24hVolumeEur(bitcoinEuroKafkaEntity.get_24hVolumeEur());
+    	entity.set_24hVolumeUsd(bitcoinEuroKafkaEntity.get_24hVolumeUsd());
+    	entity.setAvailableSupply(bitcoinEuroKafkaEntity.getAvailableSupply());
+    	entity.setId(bitcoinEuroKafkaEntity.getId());
+    	entity.setLastUpdated(bitcoinEuroKafkaEntity.getLastUpdated());
+    	entity.setMarketCapEur(bitcoinEuroKafkaEntity.getMarketCapEur());
+    	entity.setMarketCapUsd(bitcoinEuroKafkaEntity.getMarketCapUsd());
+    	entity.setMaxSupply(bitcoinEuroKafkaEntity.getMaxSupply());
+    	entity.setName(bitcoinEuroKafkaEntity.getName());
+    	entity.setPercentChange1h(bitcoinEuroKafkaEntity.getPercentChange1h());
+    	entity.setPriceEur(bitcoinEuroKafkaEntity.getPriceEur());
+    	entity.setPriceBtc(bitcoinEuroKafkaEntity.getPriceBtc());
+    	entity.setPercentChange24h(bitcoinEuroKafkaEntity.getPercentChange24h());
+    	entity.setPercentChange7d(bitcoinEuroKafkaEntity.getPercentChange7d());
+    	entity.setRank(bitcoinEuroKafkaEntity.getRank());
+    	entity.setSymbol(bitcoinEuroKafkaEntity.getSymbol());
+    	entity.setTotalSupply(bitcoinEuroKafkaEntity.getTotalSupply());
+		return entity;
+	}
 
 	public CountDownLatch getBitCoinLatch() {
 		return bitCoinLatch;
 	}
 
+	
     
 }
 
