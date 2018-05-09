@@ -31,8 +31,9 @@ public class Config {
     @Bean
     public Client client() {
         try {
+            logger.info("Creating client with ES. elasticsearchHome is " + elasticsearchHome);
             final Path tmpDir = Files.createTempDirectory(Paths.get(System.getProperty("java.io.tmpdir")), "elasticsearch_data");
-            logger.debug(tmpDir.toAbsolutePath().toString());
+            logger.debug("tmpDir is " + tmpDir.toAbsolutePath().toString());
             
             // @formatter:off
 
@@ -40,6 +41,10 @@ public class Config {
                     Settings.settingsBuilder().put("http.enabled", "false")
                                               .put("path.data", tmpDir.toAbsolutePath().toString())
                                               .put("path.home", elasticsearchHome);
+            
+            logger.info("http.enabled: " + elasticsearchSettings.get("http.enabled"));
+            logger.info("path.data: " + elasticsearchSettings.get("path.data"));
+            logger.info("path.home: " + elasticsearchSettings.get("path.home"));
             
             return new NodeBuilder()
                     .local(true)
