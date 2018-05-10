@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
+
+	Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;

@@ -2,6 +2,8 @@ package com.aironman.demo.kafka;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -19,6 +21,8 @@ import com.aironman.demo.es.service.BitCoinESService;
  */
 public class MessageListener {
 
+	Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	BitCoinESService bcESService;
 	// TODO what it is means the number?
@@ -34,37 +38,37 @@ public class MessageListener {
 
     @KafkaListener(topics = "${greeting.topic.name}", group = "foo", containerFactory = "fooKafkaListenerContainerFactory")
     public void listenGroupFoo(String message) {
-        System.out.println("Received Messasge in group 'foo': " + message);
+    	logger.info("Received Messasge in group 'foo': " + message);
         latch.countDown();
     }
 
     @KafkaListener(topics = "${greeting.topic.name}", group = "bar", containerFactory = "barKafkaListenerContainerFactory")
     public void listenGroupBar(String message) {
-        System.out.println("Received Messasge in group 'bar': " + message);
+    	logger.info("Received Messasge in group 'bar': " + message);
         latch.countDown();
     }
 
     @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "headersKafkaListenerContainerFactory")
     public void listenWithHeaders(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        System.out.println("Received Messasge: " + message + " from partition: " + partition);
+        logger.info("Received Messasge: " + message + " from partition: " + partition);
         latch.countDown();
     }
 
     @KafkaListener(topicPartitions = @TopicPartition(topic = "${partitioned.topic.name}", partitions = { "0", "3" }))
     public void listenToParition(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        System.out.println("Received Message: " + message + " from partition: " + partition);
+        logger.info("Received Message: " + message + " from partition: " + partition);
         this.partitionLatch.countDown();
     }
 
     @KafkaListener(topics = "${filtered.topic.name}", containerFactory = "filterKafkaListenerContainerFactory")
     public void listenWithFilter(String message) {
-        System.out.println("Recieved Message in filtered listener: " + message);
+        logger.info("Recieved Message in filtered listener: " + message);
         this.filterLatch.countDown();
     }
 
     @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "greetingKafkaListenerContainerFactory")
     public void greetingListener(Greeting greeting) {
-        System.out.println("Recieved greeting message: " + greeting);
+        logger.info("Recieved greeting message: " + greeting);
         this.greetingLatch.countDown();
     }
     
@@ -74,10 +78,10 @@ public class MessageListener {
      */
     @KafkaListener(topics = "${message.topic.name}", containerFactory = "bitCoinKafkaListenerContainerFactory")
     public void bitCoinListener(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
-    	System.out.println("Recieved bitcoinEuroKafkaEntity message: " + bitcoinEuroKafkaEntity);
+    	logger.info("Recieved bitcoinEuroKafkaEntity message: " + bitcoinEuroKafkaEntity);
     	BitcoinEuroESEntity entity = createElasticPojoFromKafkaPojo(bitcoinEuroKafkaEntity);
     	BitcoinEuroESEntity saved = bcESService.save(entity );
-		System.out.println("Entity saved in ES. " +saved .toString() );
+		logger.info("Entity saved in ES. " +saved .toString() );
     	this.bitCoinLatch.countDown();
     }
 
