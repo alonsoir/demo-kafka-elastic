@@ -85,7 +85,7 @@ public class MessageListener {
     	this.bitCoinLatch.countDown();
     }
 
-	private BitcoinEuroESEntity createElasticPojoFromKafkaPojo(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
+	public static BitcoinEuroESEntity createElasticPojoFromKafkaPojo(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
 		BitcoinEuroESEntity entity = new BitcoinEuroESEntity();
     	entity .set_24hVolumeEur(bitcoinEuroKafkaEntity.get_24hVolumeEur());
     	entity.set_24hVolumeUsd(bitcoinEuroKafkaEntity.get_24hVolumeUsd());
