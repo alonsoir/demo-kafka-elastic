@@ -1,0 +1,35 @@
+version: '3.6'
+services:
+  demo-kafka-elastic:
+    image: aironman/demo-kafka-elastic:0.0.1-SNAPSHOT
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+      restart_policy:
+          condition: on-failure
+    
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  elastic:
+      image: docker.elastic.co/elasticsearch/elasticsearch-platinum:6.2.4
+      ports:
+        - "9200:9200"
+        - "9300:9300"

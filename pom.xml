@@ -23,6 +23,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<dockerfile-maven-version>1.4.0</dockerfile-maven-version>
+		<docker-compose-maven-plugin-version>1.0.5</docker-compose-maven-plugin-version>
 	</properties>
 
 	<dependencies>
@@ -56,6 +58,58 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- docker plugin to create docker file. -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${dockerfile-maven-version}</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>aironman/demo-kafka-elastic</repository>
+					<tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<buildArgs>
+						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.dkanejs.maven.plugins</groupId>
+				<artifactId>docker-compose-maven-plugin</artifactId>
+				<version>${docker-compose-maven-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>up</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>up</goal>
+						</goals>
+						<configuration>
+							<composeFile>${project.basedir}/docker-compose.yml</composeFile>
+							<detachedMode>true</detachedMode>
+						</configuration>
+					</execution>
+					<execution>
+						<id>down</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>down</goal>
+						</goals>
+						<configuration>
+							<composeFile>${project.basedir}/docker-compose.yml</composeFile>
+							<removeVolumes>true</removeVolumes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
