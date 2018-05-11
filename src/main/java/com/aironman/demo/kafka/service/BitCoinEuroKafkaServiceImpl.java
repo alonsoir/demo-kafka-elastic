@@ -13,22 +13,24 @@ import com.aironman.demo.kafka.MessageListener;
 public class BitCoinEuroKafkaServiceImpl implements BitCoinEuroKafkaService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	private MessageListener listener;
 
 	@Override
-	public void getMessageFromTopic() {
+	public boolean getMessageFromTopic() {
+		boolean countDownLatch = false;
 		try {
 			// I am not sure if this method is ever invoked... This is NOT cool...
 			logger.info("BitCoinEuroServiceImpl.getMessageFromTopic...");
-			boolean countDownLatch = listener.getBitCoinLatch().await(10, TimeUnit.SECONDS);
-			logger.info("getMessageFromTopic returned countDownLatch: " + countDownLatch );
+			countDownLatch = listener.getBitCoinLatch().await(10, TimeUnit.SECONDS);
+			logger.info("getMessageFromTopic returned countDownLatch: " + countDownLatch);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.error("Ups! " + e.getLocalizedMessage());
 		}
+		return countDownLatch;
 	}
 
 }
