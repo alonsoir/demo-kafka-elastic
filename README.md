@@ -6,8 +6,13 @@ receiving data from kafka topic, saving into ES.
 
 TODO
 
-Tests!
-Docker file
-Integrate with Eureka.
+Tests! DONE
+Docker file DONE
+Integrate with Eureka In progress.
+Integrate with spring-cloud-config server. In progress.
+
+See
+
+http://www.baeldung.com/dockerizing-spring-boot-application
 
 
