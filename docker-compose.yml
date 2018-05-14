@@ -29,7 +29,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   elastic:
-      image: docker.elastic.co/elasticsearch/elasticsearch-platinum:6.2.4
+      image: elasticsearch:2.4.0
       ports:
         - "9200:9200"
         - "9300:9300"
+      environment:
+        elasticsearch.cluster-name: elasticsearch_aironman
