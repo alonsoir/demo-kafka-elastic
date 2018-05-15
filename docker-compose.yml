@@ -40,15 +40,22 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   elastic:
-      image: elasticsearch:2.4.0
-      ports:
-        - "9200:9200"
-        - "9300:9300"
+      image: elasticsearch:2.4.6-alpine
+      container_name: elastic
       environment:
-        elasticsearch.cluster-name: elasticsearch_aironman
-        transport.host: 0.0.0.0
+        - cluster.name=elastic-cluster
+        - http.host=0.0.0.0
+        - transport.host=0.0.0.0
+        - discovery.type=single-node
+        - xpack.security.enabled=false
+        - client.transport.sniff=false
+        - client.transport.ignore_cluster_name= true
       volumes: 
         - ./esdata/:/usr/share/elasticsearch/data/
+      ports:
+        - "9200:9200"
+        - "9700:9700"
+        - "9300:9300"
       
   kibana:
     image: seeruk/docker-kibana-sense:4.5
