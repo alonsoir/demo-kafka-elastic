@@ -22,3 +22,6 @@ https://hub.docker.com/r/hyness/spring-cloud-config-server/
 https://hub.docker.com/r/hyness/spring-cloud-config-server/
 
 https://github.com/Nasruddin/elasticsearch-spring-boot-spring-data
+
+
+plugin install mobz/elasticsearch-head

@@ -86,7 +86,7 @@ public class MessageListener {
 	logger.info("kafka message: " + bitcoinEuroKafkaEntity.toString());
 	BitcoinEuroESEntity entity = createElasticPojoFromKafkaPojo(bitcoinEuroKafkaEntity);
 	BitcoinEuroESEntity saved = bcESService.save(entity);
-	logger.info("ES Entity: " + saved.toString());
+	logger.info("ES Entity: " + saved != null ? saved.toString() : "ES entity NOT saved!.");
 	this.bitCoinLatch.countDown();
     }
     

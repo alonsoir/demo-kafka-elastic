@@ -10,7 +10,18 @@ services:
           memory: 512M
       restart_policy:
           condition: on-failure
-    
+          
+  demo-quartz:
+    image: aironman/demo-quartz:0.0.1-SNAPSHOT
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+      restart_policy:
+          condition: on-failure
+          
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
@@ -29,7 +40,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   elastic:
-      image: docker.elastic.co/elasticsearch/elasticsearch-platinum:6.2.4
+      image: elasticsearch:2.4.6-alpine
+      environment:
+        - cluster.name=elasticsearch
+        - http.host=0.0.0.0
+        - transport.host=0.0.0.0
+        - discovery.type=single-node
+        - xpack.security.enabled=false
+        - client.transport.sniff=false
+      volumes: 
+        - ./esdata/:/usr/share/elasticsearch/data/
       ports:
         - "9200:9200"
+        - "9700:9700"
         - "9300:9300"
+      
+  kibana:
+    image: seeruk/docker-kibana-sense:4.5
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elastic:9200      
+  
