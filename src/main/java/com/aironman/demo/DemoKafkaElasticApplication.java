@@ -38,6 +38,7 @@ public class DemoKafkaElasticApplication {
 	// this must be in the property file
 	// bitcoin by default
 	String indexName = env.getProperty("elasticsearch.indexName");
+	logger.info("indexName  is " + indexName);
 	try {
 	    boolean indexExist = operations.indexExists(indexName);
 	    if (!indexExist) {
