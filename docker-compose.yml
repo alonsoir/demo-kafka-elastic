@@ -41,15 +41,13 @@ services:
 
   elastic:
       image: elasticsearch:2.4.6-alpine
-      container_name: elastic
       environment:
-        - cluster.name=elastic-cluster
+        - cluster.name=elasticsearch
         - http.host=0.0.0.0
         - transport.host=0.0.0.0
         - discovery.type=single-node
         - xpack.security.enabled=false
         - client.transport.sniff=false
-        - client.transport.ignore_cluster_name= true
       volumes: 
         - ./esdata/:/usr/share/elasticsearch/data/
       ports:
