@@ -14,13 +14,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@PropertySource(value = { "application.properties" })
+@PropertySources({
+        // global property file
+        @PropertySource("application.properties"),
+        // local property file that I store personal properties e.g.: mail username &
+        // password.
+        @PropertySource("application-local.properties")
+})
 @EnableEurekaClient
 @RestController
 public class DemoKafkaElasticApplication {
