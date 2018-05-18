@@ -26,6 +26,7 @@
 		<dockerfile-maven-version>1.4.0</dockerfile-maven-version>
 		<docker-compose-maven-plugin-version>1.0.5</docker-compose-maven-plugin-version>
 		<spring-cloud-starter-eureka-version>1.4.4.RELEASE</spring-cloud-starter-eureka-version>
+		<spring-cloud-starter-feign-version>1.4.4.RELEASE</spring-cloud-starter-feign-version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,12 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-eureka</artifactId>
 			<version>${spring-cloud-starter-eureka-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>${spring-cloud-starter-feign-version}</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
