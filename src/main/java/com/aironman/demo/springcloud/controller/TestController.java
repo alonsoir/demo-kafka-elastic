@@ -28,12 +28,12 @@ public class TestController {
     
     @RequestMapping("/rest")
     public String doRestAlive() {
-	return new RestTemplate().getForObject("http://demo-kafka-elastic/ping", String.class);
+	return new RestTemplate().getForObject("http://demo-kafka-elastic:0/ping", String.class);
     }
     
     @RequestMapping("/rest/ribbon")
     public String doRestAliveUsingEurekaAndRibbon() {
-	return restTemplate.getForObject("http://demo-kafka-elastic/ping", String.class);
+	return restTemplate.getForObject("http://demo-kafka-elastic:0/ping", String.class);
     }
     
     @RequestMapping("/rest/feign")
