@@ -5,15 +5,13 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
@@ -60,13 +58,12 @@ public class DemoKafkaElasticApplication {
 		logger.info("index " + indexName + " created? " + creatingIndex);
 	    } else
 		logger.info("index  " + indexName + " exists? " + indexExist);
-	    Client client = operations.getClient();
-	    Settings settings = client.settings();
-	    Map<String, String> mapSettings = settings.getAsMap();
-	    Set<String> keySet = mapSettings.keySet();
+	    Map client = operations.getSetting(indexName);
+	    
+	    Set<String> keySet = client.keySet();
 	    for (String key : keySet)
 		logger.info("key: " + key +
-		        " value: " + mapSettings.get(key));
+		        " value: " + client.get(key));
 	    
 	} catch (Exception e) {
 	    logger.error("ups!" + e.getMessage());

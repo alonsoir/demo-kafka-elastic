@@ -1,5 +1,7 @@
 package com.aironman.demo.es.service;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,9 @@ public class BitCoinESServiceImpl implements BitCoinESService {
     }
     
     @Override
-    public BitcoinEuroESEntity findOne(String id) {
+    public Optional<BitcoinEuroESEntity> findOne(String id) {
 	// TODO Auto-generated method stub
-	return repository.findOne(id);
+	return repository.findById(id);
     }
     
     @Override

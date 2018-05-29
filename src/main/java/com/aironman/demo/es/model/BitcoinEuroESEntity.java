@@ -1,11 +1,9 @@
 package com.aironman.demo.es.model;
 
-import static org.springframework.data.elasticsearch.annotations.FieldIndex.not_analyzed;
-import static org.springframework.data.elasticsearch.annotations.FieldType.String;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "bitcoin", type = "article", shards = 1, replicas = 0, refreshInterval = "-1")
 public class BitcoinEuroESEntity {
@@ -14,39 +12,41 @@ public class BitcoinEuroESEntity {
     private String id;
     
     // index can be not_analyzed and analyzed
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String name;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
+    
     private String symbol;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
+    
     private String rank;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String priceUsd;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String priceBtc;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String _24hVolumeUsd;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String marketCapUsd;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String availableSupply;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String totalSupply;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String maxSupply;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String percentChange1h;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String percentChange24h;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String percentChange7d;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.Auto)
     private String lastUpdated;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String priceEur;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String _24hVolumeEur;
-    @Field(type = String, index = not_analyzed, store = true)
+    @Field(type = FieldType.text)
     private String marketCapEur;
     
     public BitcoinEuroESEntity() {

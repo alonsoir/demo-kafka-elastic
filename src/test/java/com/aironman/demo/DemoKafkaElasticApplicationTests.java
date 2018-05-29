@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -26,7 +27,6 @@ import org.springframework.util.concurrent.ListenableFuture;
 
 import com.aironman.demo.es.model.BitcoinEuroESEntity;
 import com.aironman.demo.es.service.BitCoinESService;
-import com.aironman.demo.kafka.BitcoinEuroKafkaEntity;
 import com.aironman.demo.kafka.MessageListener;
 import com.aironman.demo.kafka.MessageProducer;
 import com.aironman.demo.kafka.service.BitCoinEuroKafkaService;
@@ -59,16 +59,16 @@ public class DemoKafkaElasticApplicationTests {
 	
 	logger.info("INIT produceKafkaMessage...");
 	String id = "kafkaId";
-	BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
-	ListenableFuture<SendResult<String, BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(
+	com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
+	ListenableFuture<SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(
 	        entity);
 	assertNotNull(listenable);
 	try {
-	    SendResult<String, BitcoinEuroKafkaEntity> recovered = listenable.get(10, TimeUnit.SECONDS);
+	    SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity> recovered = listenable.get(10, TimeUnit.SECONDS);
 	    assertNotNull(recovered);
-	    ProducerRecord<String, BitcoinEuroKafkaEntity> producerRecord = recovered.getProducerRecord();
+	    ProducerRecord<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity> producerRecord = recovered.getProducerRecord();
 	    assertNotNull(producerRecord);
-	    BitcoinEuroKafkaEntity bitCoinRecoveredKafkaEntity = producerRecord.value();
+	    com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity bitCoinRecoveredKafkaEntity = producerRecord.value();
 	    assertNotNull(bitCoinRecoveredKafkaEntity);
 	    assertEquals("should be equals...", entity, bitCoinRecoveredKafkaEntity);
 	} catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -84,17 +84,18 @@ public class DemoKafkaElasticApplicationTests {
     public void testProduceKafkaRecoverFromTopicAndSaveTOElasticSearch() {
 	logger.info("INIT testProduceKafkaRecoverFromTopicAndSaveTOElasticSearch...");
 	String id = "anotherKafkaId";
-	BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
+	com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
 	logger.info("Sending entity to kafka topic: " + entity.toString());
-	ListenableFuture<SendResult<String, BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(entity);
+	ListenableFuture<SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(
+	        entity);
 	assertNotNull(listenable);
 	logger.info("Sent entity: " + listenable.toString());
 	try {
-	    SendResult<String, BitcoinEuroKafkaEntity> recovered = listenable.get(10, TimeUnit.SECONDS);
+	    SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity> recovered = listenable.get(10, TimeUnit.SECONDS);
 	    assertNotNull(recovered);
-	    ProducerRecord<String, BitcoinEuroKafkaEntity> producerRecord = recovered.getProducerRecord();
+	    ProducerRecord<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity> producerRecord = recovered.getProducerRecord();
 	    assertNotNull(producerRecord);
-	    BitcoinEuroKafkaEntity bitCoinRecoveredKafkaEntity = producerRecord.value();
+	    com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity bitCoinRecoveredKafkaEntity = producerRecord.value();
 	    assertNotNull(bitCoinRecoveredKafkaEntity);
 	    logger.info("Recovered entity from topic: " + bitCoinRecoveredKafkaEntity.toString());
 	    assertEquals("should be equals...", entity, bitCoinRecoveredKafkaEntity);
@@ -103,8 +104,8 @@ public class DemoKafkaElasticApplicationTests {
 	    BitcoinEuroESEntity esSaved = esService.save(_entity);
 	    assertNotNull(esSaved);
 	    logger.info("esSaved: " + esSaved.toString());
-	    BitcoinEuroESEntity esRecovered = esService.findOne(id);
-	    assertNotNull(esRecovered);
+	    Optional<BitcoinEuroESEntity> esRecovered = esService.findOne(id);
+	    assertNotNull(esRecovered.get());
 	    logger.info("esRecovered: " + esRecovered.toString());
 	} catch (InterruptedException | ExecutionException | TimeoutException e) {
 	    // TODO Auto-generated catch block
@@ -115,8 +116,8 @@ public class DemoKafkaElasticApplicationTests {
 	logger.info("END testProduceKafkaRecoverFromTopicAndSaveTOElasticSearch...");
     }
     
-    private ListenableFuture<SendResult<String, BitcoinEuroKafkaEntity>> createKafkaEntityAndSendToTopic(
-            BitcoinEuroKafkaEntity entity) {
+    private ListenableFuture<SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity>> createKafkaEntityAndSendToTopic(
+            com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity entity) {
 	return messageProducer.sendMessageToTopic(entity);
     }
     
@@ -124,9 +125,9 @@ public class DemoKafkaElasticApplicationTests {
     public void testBitCoinEuroKafkaService() {
 	logger.info("INT testBitCoinEuroKafkaService ");
 	String id = "testBitCoinEuroKafkaServiceId";
-	BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
+	com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity entity = createKafka_Entity(id);
 	logger.info("Sending entity to kafka topic: " + entity.toString());
-	ListenableFuture<SendResult<String, BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(
+	ListenableFuture<SendResult<String, com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity>> listenable = createKafkaEntityAndSendToTopic(
 	        entity);
 	assertNotNull(listenable);
 	logger.info("Sent entity: " + listenable.toString());
@@ -146,6 +147,7 @@ public class DemoKafkaElasticApplicationTests {
 	logger.info("saved: " + saved.toString());
 	logger.info(saved.toString());
 	assertNotNull("not null...", saved);
+	@SuppressWarnings("deprecation")
 	Pageable pageable = new PageRequest(0, 10);
 	Page<BitcoinEuroESEntity> page = esService.findById(_id, pageable);
 	List<BitcoinEuroESEntity> list = page.getContent();
@@ -211,8 +213,8 @@ public class DemoKafkaElasticApplicationTests {
 	return entity;
     }
     
-    private BitcoinEuroKafkaEntity createKafka_Entity(String _id) {
-	BitcoinEuroKafkaEntity entity = new BitcoinEuroKafkaEntity();
+    private com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity createKafka_Entity(String _id) {
+	com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity entity = new com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity();
 	entity.set_24hVolumeEur("_24hVolumeEur");
 	entity.set_24hVolumeUsd("_24hVolumeUsd");
 	entity.setAvailableSupply("availableSupply");

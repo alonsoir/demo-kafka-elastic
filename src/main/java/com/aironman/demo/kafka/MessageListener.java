@@ -38,13 +38,13 @@ public class MessageListener {
     
     private CountDownLatch bitCoinLatch = new CountDownLatch(1);
     
-    @KafkaListener(topics = "${greeting.topic.name}", group = "foo", containerFactory = "fooKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "fooKafkaListenerContainerFactory")
     public void listenGroupFoo(String message) {
 	logger.info("Received Messasge in group 'foo': " + message);
 	latch.countDown();
     }
     
-    @KafkaListener(topics = "${greeting.topic.name}", group = "bar", containerFactory = "barKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "barKafkaListenerContainerFactory")
     public void listenGroupBar(String message) {
 	logger.info("Received Messasge in group 'bar': " + message);
 	latch.countDown();
@@ -81,7 +81,7 @@ public class MessageListener {
      *            the new message from the topic.
      */
     @KafkaListener(topics = "${message.topic.name}", containerFactory = "bitCoinKafkaListenerContainerFactory")
-    public void bitCoinListener(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
+    public void bitCoinListener(com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
 	
 	logger.info("kafka message: " + bitcoinEuroKafkaEntity.toString());
 	BitcoinEuroESEntity entity = createElasticPojoFromKafkaPojo(bitcoinEuroKafkaEntity);
@@ -90,7 +90,8 @@ public class MessageListener {
 	this.bitCoinLatch.countDown();
     }
     
-    public static BitcoinEuroESEntity createElasticPojoFromKafkaPojo(BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
+    public static BitcoinEuroESEntity createElasticPojoFromKafkaPojo(
+            com.aironman.demoquartz.kafka.BitcoinEuroKafkaEntity bitcoinEuroKafkaEntity) {
 	BitcoinEuroESEntity entity = new BitcoinEuroESEntity();
 	entity.set_24hVolumeEur(bitcoinEuroKafkaEntity.get_24hVolumeEur());
 	entity.set_24hVolumeUsd(bitcoinEuroKafkaEntity.get_24hVolumeUsd());
