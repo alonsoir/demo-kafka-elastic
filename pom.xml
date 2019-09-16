@@ -26,7 +26,7 @@
 		<dockerfile-maven-version>1.4.0</dockerfile-maven-version>
 		<docker-compose-maven-plugin-version>1.0.5</docker-compose-maven-plugin-version>
 		<spring-cloud-starter-eureka-version>1.4.4.RELEASE</spring-cloud-starter-eureka-version>
-		<spring-cloud-starter-feign-version>1.4.4.RELEASE</spring-cloud-starter-feign-version>
+		<spring-cloud-starter-feign-version>1.4.7.RELEASE</spring-cloud-starter-feign-version>
 	</properties>
 
 	<dependencies>
