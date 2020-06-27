@@ -7,27 +7,22 @@ receiving data from kafka topic, saving into ES.
 
 TODO
 
-Tests! DONE <br\r>
-Docker file DONE <br\r>
-Docker-compose DONE <br\r>
-Saving in ES 2.4.1 using property file. DONE <br\r>
-Integrate with Eureka DONE. <br\r>
-Update docker-compose file to use an integrated eureka server. <br\r>
-Actually application.yml poins to localhost. In progress <br\r>
-Integrate with spring-cloud-config server.Not yet. <br\r>
-Doing something cool with Kibana. Not yet<br\r>
-<br\r>
+Tests! DONE 
+Docker file DONE 
+Docker-compose DONE
+Saving in ES 2.4.1 using property file. DONE 
+Integrate with Eureka DONE. 
+Update docker-compose file to use an integrated eureka server. Not yet. 
+Actually application.yml poins to localhost. Not yet. 
+Integrate with spring-cloud-config server.Not yet. 
+Doing something cool with Kibana. Not yet
+
 
 Interesting links<br\r>
 
 http://www.baeldung.com/dockerizing-spring-boot-application
-<br\r>
 https://hub.docker.com/r/hyness/spring-cloud-config-server/
-<br\r>
 https://hub.docker.com/r/hyness/spring-cloud-config-server/
-<br\r>
 https://github.com/Nasruddin/elasticsearch-spring-boot-spring-data
-<br\r>
 
 plugin install mobz/elasticsearch-head
-<br\r>
