@@ -24,7 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<dockerfile-maven-version>1.4.0</dockerfile-maven-version>
-		<docker-compose-maven-plugin-version>1.0.5</docker-compose-maven-plugin-version>
+		<docker-compose-maven-plugin-version>4.0.0</docker-compose-maven-plugin-version>
 		<spring-cloud-starter-eureka-version>1.4.4.RELEASE</spring-cloud-starter-eureka-version>
 		<spring-cloud-starter-feign-version>1.4.4.RELEASE</spring-cloud-starter-feign-version>
 	</properties>
